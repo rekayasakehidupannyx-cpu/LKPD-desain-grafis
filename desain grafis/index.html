@@ -1,0 +1,1151 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LKPD Interaktif: Dasar-Dasar Desain Grafis SMP</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- Google Fonts Inter & Poppins -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body
+    class="edu-bg min-h-screen text-slate-900 transition-colors duration-200 flex flex-col justify-between"
+  >
+    <!-- Modal Passcode Akses Pemateri -->
+    <div
+      id="modal-passcode-guru"
+      class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
+    >
+      <div
+        class="bg-white rounded-2xl p-6 shadow-2xl max-w-sm w-full border border-slate-200 text-center space-y-4"
+      >
+        <div
+          class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto text-xl"
+        >
+          <i class="fa-solid fa-lock"></i>
+        </div>
+        <div>
+          <h3 class="font-bold text-slate-900 text-base">
+            Akses Pemateri / Guru
+          </h3>
+          <p class="text-xs text-slate-500 mt-1">
+            Masukkan PIN untuk membuka Panel Pemateri & Pengaturan Google Drive.
+          </p>
+        </div>
+        <input
+          type="password"
+          id="input-passcode-guru"
+          placeholder="Masukkan PIN (Default: 1234)"
+          class="w-full p-3 rounded-xl border border-slate-300 text-center font-bold text-sm tracking-widest outline-none focus:ring-2 focus:ring-indigo-500 bg-slate-50"
+        />
+        <div class="flex flex-col gap-2">
+          <button
+            type="button"
+            onclick="closeGuruPasscodeModal()"
+            class="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition"
+          >
+            Batal
+          </button>
+          <button
+            type="button"
+            onclick="verifyGuruPasscode()"
+            class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow transition"
+          >
+            Masuk Panel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header Navigation Bar -->
+    <header
+      class="bg-white/90 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-50 no-print shadow-sm"
+    >
+      <div
+        class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 text-white flex items-center justify-center text-lg font-bold shadow-md"
+          >
+            <i class="fa-solid fa-shapes"></i>
+          </div>
+          <div>
+            <h1
+              id="header-title-text"
+              class="font-bold text-slate-900 text-base md:text-lg leading-tight"
+            >
+              LKPD Desain Grafis: Logo Inisial Nama
+            </h1>
+            <p class="text-[11px] text-slate-500 font-medium">
+              Lembar Kerja Peserta Didik Interaktif SMP
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button
+            type="button"
+            onclick="resetForm()"
+            title="Reset Form"
+            class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold transition flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-rotate"></i>
+            <span class="hidden sm:inline">Reset</span>
+          </button>
+          <button
+            type="button"
+            onclick="openGuruPasscodeModal()"
+            title="Panel Pemateri"
+            class="p-2.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-bold transition flex items-center gap-1.5 border border-indigo-200"
+          >
+            <i class="fa-solid fa-user-gear"></i>
+            <span class="hidden sm:inline">Pemateri</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Panel Editor Guru & Konfigurasi Google Drive -->
+    <div
+      id="panel-editor-guru"
+      class="hidden bg-slate-900 text-white p-6 rounded-2xl shadow-2xl border border-slate-700 max-w-5xl mx-auto my-6 space-y-6 no-print"
+    >
+      <div
+        class="flex items-center justify-between border-b border-slate-700 pb-4"
+      >
+        <div class="flex items-center gap-3">
+          <div
+            class="w-10 h-10 bg-indigo-500/20 text-indigo-400 rounded-xl flex items-center justify-center text-lg font-bold"
+          >
+            <i class="fa-solid fa-sliders"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-lg text-white">
+              Panel Pemateri & Integrasi Google Drive
+            </h3>
+            <p class="text-xs text-slate-400">
+              Atur koneksi Google Drive, ubah PIN, atau sesuaikan materi LKPD.
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onclick="toggleGuruEditorPanel(false)"
+          class="text-slate-400 hover:text-white p-2"
+        >
+          <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+      </div>
+
+      <!-- Setting Integrasi Google Drive -->
+      <div
+        class="bg-slate-800/80 p-4 rounded-xl border border-slate-700 space-y-3"
+      >
+        <div class="flex items-center gap-2 text-amber-400 font-bold text-sm">
+          <i class="fa-brands fa-google-drive"></i>
+          <span>Konfigurasi Google Apps Script Web App URL</span>
+        </div>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          Tempelkan URL Google Apps Script milik Anda di bawah ini agar foto
+          logo & jawaban siswa tersimpan ke Google Drive Anda:
+        </p>
+        <input
+          type="text"
+          id="edit-gas-url"
+          placeholder="https://script.google.com/macros/s/AKfycbx.../exec"
+          class="w-full p-3 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white outline-none focus:border-indigo-500 font-mono"
+        />
+
+        <details
+          class="text-xs text-slate-300 bg-slate-900 p-3 rounded-xl border border-slate-700 cursor-pointer"
+          open
+        >
+          <summary class="font-bold text-indigo-300 hover:underline">
+            📋 Kode Google Apps Script (Sesuai file Code.gs)
+          </summary>
+          <div class="mt-3 space-y-2 text-[11px] font-sans">
+            <p class="text-amber-400 font-bold">
+              Gunakan script dari file <code>Code.gs</code> di Google Apps
+              Script Anda.
+            </p>
+          </div>
+        </details>
+      </div>
+
+      <!-- Form Edit Konten LKPD -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div class="space-y-1">
+          <label class="font-bold text-slate-300">Judul LKPD:</label>
+          <input
+            type="text"
+            id="edit-judul-lkpd"
+            class="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white font-medium"
+          />
+        </div>
+        <div class="space-y-1">
+          <label class="font-bold text-slate-300"
+            >Ubah PIN Akses Pemateri:</label
+          >
+          <input
+            type="text"
+            id="edit-passcode-guru"
+            placeholder="Default: 1234"
+            class="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white font-medium"
+          />
+        </div>
+        <div class="md:col-span-2 space-y-1">
+          <label class="font-bold text-slate-300"
+            >Pengantar Materi Ringkas:</label
+          >
+          <textarea
+            id="edit-pengantar-materi"
+            rows="3"
+            class="w-full p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white font-medium"
+          ></textarea>
+        </div>
+        <div class="space-y-1">
+          <label class="font-bold text-slate-300">Soal Esai 1:</label>
+          <input
+            type="text"
+            id="edit-esai-1"
+            class="w-full p-2 rounded-xl bg-slate-800 border border-slate-700 text-white"
+          />
+        </div>
+        <div class="space-y-1">
+          <label class="font-bold text-slate-300">Soal Esai 2:</label>
+          <input
+            type="text"
+            id="edit-esai-2"
+            class="w-full p-2 rounded-xl bg-slate-800 border border-slate-700 text-white"
+          />
+        </div>
+        <div class="space-y-1">
+          <label class="font-bold text-slate-300">Soal Esai 3:</label>
+          <input
+            type="text"
+            id="edit-esai-3"
+            class="w-full p-2 rounded-xl bg-slate-800 border border-slate-700 text-white"
+          />
+        </div>
+        <div class="space-y-1">
+          <label class="font-bold text-slate-300">Soal Esai 4:</label>
+          <input
+            type="text"
+            id="edit-esai-4"
+            class="w-full p-2 rounded-xl bg-slate-800 border border-slate-700 text-white"
+          />
+        </div>
+        <div class="md:col-span-2 space-y-1">
+          <label class="font-bold text-slate-300">Soal Esai 5:</label>
+          <input
+            type="text"
+            id="edit-esai-5"
+            class="w-full p-2 rounded-xl bg-slate-800 border border-slate-700 text-white"
+          />
+        </div>
+      </div>
+
+      <div
+        class="flex justify-between items-center pt-2 border-t border-slate-700"
+      >
+        <button
+          type="button"
+          onclick="resetMateriDefault()"
+          class="text-xs text-amber-400 hover:underline font-semibold"
+        >
+          <i class="fa-solid fa-rotate-left"></i> Reset Kebijakan Materi Default
+        </button>
+        <button
+          type="button"
+          onclick="simpanKustomisasiGuru()"
+          class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-lg transition flex items-center gap-2"
+        >
+          <i class="fa-solid fa-floppy-disk"></i> Simpan Konfigurasi
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="max-w-5xl mx-auto px-4 py-8 w-full space-y-8 flex-grow">
+      <!-- Banner Ilustrasi Edukasi Sekolah -->
+      <div
+        class="bg-gradient-to-r from-sky-600 via-indigo-600 to-sky-700 text-white p-6 rounded-2xl shadow-lg border-2 border-white/40 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden"
+      >
+        <div class="space-y-2 text-center md:text-left z-10">
+          <div
+            class="inline-flex items-center gap-2 bg-amber-400 text-slate-900 font-bold px-3 py-1 rounded-full text-xs shadow-sm"
+          >
+            <i class="fa-solid fa-graduation-cap"></i> Modul Pembelajaran
+            Digital SMP
+          </div>
+          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">
+            Selamat Datang di LKPD Desain Grafis!
+          </h2>
+          <p
+            class="text-xs md:text-sm text-sky-100 max-w-xl font-medium leading-relaxed"
+          >
+            Eksplorasi kreativitasmu dalam menyampaikan informasi visual melalui
+            perpaduan garis, bentuk, warna, dan tipografi.
+          </p>
+        </div>
+
+        <div
+          class="flex items-center gap-3 z-10 bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/20 shadow-inner"
+        >
+          <div
+            class="w-12 h-12 rounded-xl bg-amber-400 text-slate-900 flex items-center justify-center text-2xl shadow"
+          >
+            <i class="fa-solid fa-paintbrush"></i>
+          </div>
+          <div
+            class="w-12 h-12 rounded-xl bg-emerald-400 text-slate-900 flex items-center justify-center text-2xl shadow"
+          >
+            <i class="fa-solid fa-icons"></i>
+          </div>
+          <div
+            class="w-12 h-12 rounded-xl bg-sky-400 text-slate-900 flex items-center justify-center text-2xl shadow"
+          >
+            <i class="fa-solid fa-book-open"></i>
+          </div>
+        </div>
+
+        <div
+          class="absolute -right-10 -bottom-10 w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none"
+        ></div>
+      </div>
+
+      <!-- Section 1: Identitas Siswa -->
+      <section
+        class="bg-white p-6 rounded-2xl shadow-md border border-slate-200/80 space-y-4"
+      >
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+          <div
+            class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg"
+          >
+            <i class="fa-solid fa-id-card"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 text-base">
+              A. Identitas Siswa
+            </h3>
+            <p class="text-xs text-slate-600 font-medium">
+              Isi identitas diri kamu secara lengkap sebelum mulai belajar.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-medium">
+          <div>
+            <label class="block text-slate-800 font-bold mb-1"
+              >Nama Lengkap Siswa</label
+            >
+            <input
+              type="text"
+              id="nama-siswa"
+              placeholder="Contoh: Budi Santoso"
+              class="w-full p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 font-semibold bg-slate-50"
+            />
+          </div>
+          <div>
+            <label class="block text-slate-800 font-bold mb-1">Kelas</label>
+            <select
+              id="kelas-siswa"
+              class="w-full p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 font-semibold bg-slate-50"
+            >
+              <option value="">-- Pilih Kelas --</option>
+              <option value="Kelas 7 (VII)">Kelas 1 SMP / VII</option>
+              <option value="Kelas 8 (VIII)">Kelas 2 SMP / VIII</option>
+              <option value="Kelas 9 (IX)">Kelas 3 SMP / IX</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-800 font-bold mb-1"
+              >Nomor Absen</label
+            >
+            <input
+              type="number"
+              id="absen-siswa"
+              placeholder="Contoh: 08"
+              class="w-full p-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 font-semibold bg-slate-50"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 2: Ringkasan Materi Pembelajaran -->
+      <section
+        class="bg-white p-6 rounded-2xl shadow-md border border-slate-200/80 space-y-4"
+      >
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+          <div
+            class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-lg"
+          >
+            <i class="fa-solid fa-shapes"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 text-base">
+              B. Materi Singkat: Membuat Logo Inisial Nama (Monogram)
+            </h3>
+            <p class="text-xs text-slate-600 font-medium">
+              Pelajari panduan mudah merancang logo unik dari inisial namamu
+              sendiri!
+            </p>
+          </div>
+        </div>
+
+        <div
+          id="display-pengantar-materi"
+          class="text-sm leading-relaxed text-slate-800 font-medium space-y-3 bg-amber-50/50 p-4 rounded-xl border border-amber-200/60"
+        >
+          <p>
+            <strong>Logo Inisial (Monogram)</strong> adalah jenis logo yang
+            menggunakan gabungan 1 hingga 3 huruf awal/inisial nama seseorang
+            atau merk untuk menciptakan tanda identitas visual yang khas dan
+            mudah diingat.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs mt-2">
+            <div
+              class="bg-white p-3 rounded-lg border border-slate-200 space-y-1"
+            >
+              <span class="font-bold text-indigo-600 block"
+                ><i class="fa-solid fa-font"></i> 1. Pilih Huruf Inisial</span
+              >
+              <p class="text-slate-600">
+                Gunakan huruf depan dari nama depan dan nama belakangmu (Contoh:
+                Budi Santoso ➔ <strong>BS</strong>).
+              </p>
+            </div>
+            <div
+              class="bg-white p-3 rounded-lg border border-slate-200 space-y-1"
+            >
+              <span class="font-bold text-emerald-600 block"
+                ><i class="fa-solid fa-pen-nib"></i> 2. Eksplorasi Bentuk</span
+              >
+              <p class="text-slate-600">
+                Gabungkan atau tumpuk kedua huruf tersebut agar membentuk satu
+                kesatuan gambar visual yang menarik.
+              </p>
+            </div>
+            <div
+              class="bg-white p-3 rounded-lg border border-slate-200 space-y-1"
+            >
+              <span class="font-bold text-amber-600 block"
+                ><i class="fa-solid fa-fill-drip"></i> 3. Beri Warna Khas</span
+              >
+              <p class="text-slate-600">
+                Pilih 1 atau 2 warna kesukaanmu yang menggambarkan kepribadianmu
+                (misal: Biru = Tenang, Merah = Berani).
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Simulator Desain -->
+      <section
+        class="bg-white p-6 rounded-2xl shadow-md border border-slate-200/80 space-y-6"
+      >
+        <div
+          class="flex items-center justify-between border-b border-slate-100 pb-3"
+        >
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center font-bold text-lg"
+            >
+              <i class="fa-solid fa-sliders"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-slate-900 text-base">
+                C. Studio Simulator Desain & Kontras Visual
+              </h3>
+              <p class="text-xs text-slate-600 font-medium">
+                Uji coba prinsip hierarki visual dan warna secara langsung di
+                kanvas interaktif!
+              </p>
+            </div>
+          </div>
+          <span
+            class="bg-sky-100 text-sky-700 text-xs font-bold px-3 py-1 rounded-full"
+            >Fitur Interaktif</span
+          >
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div
+            class="lg:col-span-5 bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4 text-xs"
+          >
+            <h4
+              class="font-bold text-slate-800 flex items-center gap-1.5 border-b pb-2"
+            >
+              <i class="fa-solid fa-sliders text-indigo-600"></i> Kontrol
+              Simulator Desain
+            </h4>
+
+            <div>
+              <div
+                class="flex justify-between font-semibold text-slate-700 mb-1"
+              >
+                <span>Ukuran Judul (Hierarki Utama):</span>
+                <span id="label-title-size" class="text-indigo-600 font-bold"
+                  >28px</span
+                >
+              </div>
+              <input
+                type="range"
+                id="sim-title-size"
+                min="16"
+                max="44"
+                value="28"
+                oninput="updateSimulatorCanvas()"
+                class="w-full accent-indigo-600 cursor-pointer"
+              />
+            </div>
+
+            <div>
+              <div
+                class="flex justify-between font-semibold text-slate-700 mb-1"
+              >
+                <span>Ukuran Isi Teks:</span>
+                <span id="label-body-size" class="text-indigo-600 font-bold"
+                  >14px</span
+                >
+              </div>
+              <input
+                type="range"
+                id="sim-body-size"
+                min="10"
+                max="22"
+                value="14"
+                oninput="updateSimulatorCanvas()"
+                class="w-full accent-indigo-600 cursor-pointer"
+              />
+            </div>
+
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1.5"
+                >Kombinasi Warna & Kontras:</label
+              >
+              <div class="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onclick="setSimColor('#ffffff', '#0f172a')"
+                  class="p-2 rounded-lg border border-slate-300 bg-white text-slate-900 font-bold text-left text-[11px] hover:border-indigo-500"
+                >
+                  白 Terang (Kontras Baik)
+                </button>
+                <button
+                  type="button"
+                  onclick="setSimColor('#0f172a', '#ffffff')"
+                  class="p-2 rounded-lg border border-slate-300 bg-slate-900 text-white font-bold text-left text-[11px] hover:border-indigo-500"
+                >
+                  黑 Gelap (Kontras Baik)
+                </button>
+                <button
+                  type="button"
+                  onclick="setSimColor('#fef08a', '#eab308')"
+                  class="p-2 rounded-lg border border-slate-300 bg-yellow-100 text-yellow-700 font-bold text-left text-[11px] hover:border-indigo-500"
+                >
+                  ⚠️ Kuning Pudar (Kontras Buruk)
+                </button>
+                <button
+                  type="button"
+                  onclick="setSimColor('#3b82f6', '#ffffff')"
+                  class="p-2 rounded-lg border border-slate-300 bg-blue-500 text-white font-bold text-left text-[11px] hover:border-indigo-500"
+                >
+                  🔷 Biru Modern
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1"
+                >Tambah Elemen Visual / Stiker:</label
+              >
+              <div class="flex gap-2">
+                <button
+                  type="button"
+                  onclick="toggleSimSticker('star')"
+                  class="px-3 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold transition"
+                >
+                  ⭐ Bintang
+                </button>
+                <button
+                  type="button"
+                  onclick="toggleSimSticker('badge')"
+                  class="px-3 py-1.5 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold transition"
+                >
+                  🏷️ Badge
+                </button>
+                <button
+                  type="button"
+                  onclick="toggleSimSticker('light')"
+                  class="px-3 py-1.5 rounded-lg bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold transition"
+                >
+                  💡 Ide
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7 flex flex-col justify-between space-y-3">
+            <div
+              id="sim-canvas"
+              class="w-full h-64 rounded-2xl p-6 flex flex-col justify-between border-2 border-slate-300 transition-all shadow-inner relative overflow-hidden bg-white text-slate-900"
+            >
+              <div class="space-y-2 z-10">
+                <div
+                  id="sim-canvas-title"
+                  class="font-extrabold leading-tight"
+                  style="font-size: 28px"
+                >
+                  PAMERAN KARYA DESAIN SMP
+                </div>
+                <div
+                  id="sim-canvas-body"
+                  class="font-medium opacity-90"
+                  style="font-size: 14px"
+                >
+                  Saksikan kreativitas siswa-siswi dalam menyampaikan pesan
+                  visual melalui warna, tipografi, dan komposisi poster.
+                </div>
+              </div>
+
+              <div class="flex justify-between items-end z-10">
+                <span
+                  id="sim-canvas-badge"
+                  class="px-3 py-1 bg-amber-400 text-slate-900 font-extrabold text-xs rounded-full shadow hidden"
+                >
+                  ⭐ ACARA SPESIAL
+                </span>
+                <span
+                  id="sim-canvas-footer"
+                  class="text-[10px] font-bold uppercase tracking-widest opacity-75"
+                >
+                  Aula Sekolah • Mulai 08.00 WIB
+                </span>
+              </div>
+            </div>
+
+            <div
+              class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs"
+            >
+              <span class="font-semibold text-slate-700"
+                >Tingkat Keterbacaan & Kontras:</span
+              >
+              <span
+                id="sim-contrast-status"
+                class="font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800"
+              >
+                ✅ Sangat Baik & Mudah Dibaca
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Uji Istilah Interaktif -->
+      <section
+        class="bg-white p-6 rounded-2xl shadow-md border border-slate-200/80 space-y-4"
+      >
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+          <div
+            class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-lg"
+          >
+            <i class="fa-solid fa-puzzle-piece"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 text-base">
+              D. Uji Istilah: Jodohkan Konsep Desain
+            </h3>
+            <p class="text-xs text-slate-600 font-medium">
+              Pasangkan istilah desain grafis berikut dengan penjelasan yang
+              paling tepat!
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div
+            class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5"
+          >
+            <label class="font-bold text-slate-800 block"
+              >1. Mode Warna khusus untuk cetak (Print Out):</label
+            >
+            <select
+              id="match-q1"
+              class="w-full p-2 rounded-lg border border-slate-300 font-semibold bg-white text-slate-900"
+            >
+              <option value="">-- Pilih Jawaban --</option>
+              <option value="cmyk">
+                CMYK (Cyan, Magenta, Yellow, Key/Black)
+              </option>
+              <option value="rgb">RGB (Red, Green, Blue)</option>
+              <option value="vector">Gambar Vektor</option>
+            </select>
+          </div>
+
+          <div
+            class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5"
+          >
+            <label class="font-bold text-slate-800 block"
+              >2. Mode Warna untuk layar digital / monitor:</label
+            >
+            <select
+              id="match-q2"
+              class="w-full p-2 rounded-lg border border-slate-300 font-semibold bg-white text-slate-900"
+            >
+              <option value="">-- Pilih Jawaban --</option>
+              <option value="cmyk">CMYK</option>
+              <option value="rgb">RGB (Red, Green, Blue)</option>
+              <option value="raster">Gambar Raster/Bitmap</option>
+            </select>
+          </div>
+
+          <div
+            class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5"
+          >
+            <label class="font-bold text-slate-800 block"
+              >3. Seni menata jenis huruf agar estetik & terbaca:</label
+            >
+            <select
+              id="match-q3"
+              class="w-full p-2 rounded-lg border border-slate-300 font-semibold bg-white text-slate-900"
+            >
+              <option value="">-- Pilih Jawaban --</option>
+              <option value="tipografi">Tipografi (Typography)</option>
+              <option value="ilustrasi">Ilustrasi Vektor</option>
+              <option value="resolusi">Resolusi DPI</option>
+            </select>
+          </div>
+
+          <div
+            class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5"
+          >
+            <label class="font-bold text-slate-800 block"
+              >4. Jenis gambar yang tidak pecah saat diperbesar:</label
+            >
+            <select
+              id="match-q4"
+              class="w-full p-2 rounded-lg border border-slate-300 font-semibold bg-white text-slate-900"
+            >
+              <option value="">-- Pilih Jawaban --</option>
+              <option value="vector">Vektor (Berbasis Garis Matematika)</option>
+              <option value="raster">Bitmap / JPEG Pixel</option>
+              <option value="cmyk">CMYK</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex justify-end pt-2">
+          <button
+            type="button"
+            onclick="cekJawabanMatch()"
+            class="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs px-4 py-2 rounded-xl shadow transition flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-check-double"></i> Cek Jawaban Jodohkan
+          </button>
+        </div>
+      </section>
+
+      <!-- Section 5: Studi Kasus -->
+      <section
+        class="bg-white p-6 rounded-2xl shadow-md border border-slate-200/80 space-y-4"
+      >
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+          <div
+            class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-lg"
+          >
+            <i class="fa-solid fa-lightbulb"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 text-base">
+              E. Tantangan Studi Kasus: Solusi Desain Visual
+            </h3>
+            <p class="text-xs text-slate-600 font-medium">
+              Bantu selesaikan masalah desain visual berikut berdasarkan
+              pemahamanmu!
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="p-4 bg-emerald-50/60 rounded-xl border border-emerald-200 space-y-3 text-xs"
+        >
+          <div class="font-bold text-emerald-950 text-sm">
+            📌 Kasus: Poster Lomba Kebersihan Sekolah Sepi Peminat
+          </div>
+          <p class="text-emerald-900 leading-relaxed">
+            Pengurus OSIS membuat poster lomba kebersihan sekolah, namun banyak
+            siswa mengeluh teksnya sulit dibaca dari jauh karena warna tulisan
+            kuning muda menimpa latar putih, serta judulnya dibuat sangat kecil.
+          </p>
+          <div class="space-y-2 pt-2 border-t border-emerald-200">
+            <label class="font-bold text-slate-800 block"
+              >Pilih 2 perbaikan paling tepat yang harus dilakukan:</label
+            >
+            <div class="space-y-1.5">
+              <label
+                class="flex items-center gap-2 font-medium text-slate-800 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  id="case-opt-1"
+                  class="rounded accent-emerald-600"
+                />
+                Mengganti warna judul menjadi gelap (seperti biru tua) agar
+                lebih kontras.
+              </label>
+              <label
+                class="flex items-center gap-2 font-medium text-slate-800 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  id="case-opt-2"
+                  class="rounded accent-emerald-600"
+                />
+                Memperbesar ukuran teks judul utama sesuai hierarki visual.
+              </label>
+              <label
+                class="flex items-center gap-2 font-medium text-slate-800 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  id="case-opt-3"
+                  class="rounded accent-emerald-600"
+                />
+                Menambah gambar sebanyak mungkin hingga menutup seluruh teks.
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 6: Upload Karya -->
+      <section
+        class="bg-white p-6 rounded-2xl shadow-md border border-slate-200/80 space-y-4"
+      >
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+          <div
+            class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg"
+          >
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 text-base">
+              F. Unggah Hasil Foto Logo Inisial Nama
+            </h3>
+            <p class="text-xs text-slate-600 font-medium">
+              Unggah foto hasil sketsa/desain logo inisial namamu (Format: JPG /
+              PNG, Max 5MB).
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div
+            id="upload-placeholder"
+            onclick="document.getElementById('input-karya-file').click()"
+            class="border-2 border-dashed border-slate-300 hover:border-indigo-500 bg-slate-50 hover:bg-indigo-50/30 p-8 rounded-2xl text-center cursor-pointer transition flex flex-col items-center justify-center gap-2"
+          >
+            <div
+              class="w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl"
+            >
+              <i class="fa-solid fa-image"></i>
+            </div>
+            <span class="font-bold text-xs text-slate-800"
+              >Klik di sini untuk mengambil / memilih foto logo kamu</span
+            >
+            <span class="text-[11px] text-slate-500"
+              >Mendukung format .PNG, .JPG, .JPEG</span
+            >
+            <input
+              type="file"
+              id="input-karya-file"
+              accept="image/*"
+              onchange="handleFileUpload(event)"
+              class="hidden"
+            />
+          </div>
+
+          <div
+            id="upload-preview-container"
+            class="hidden p-4 bg-indigo-50/50 rounded-2xl border border-indigo-200 space-y-3"
+          >
+            <div class="flex items-center justify-between">
+              <span
+                id="upload-file-info"
+                class="text-xs font-bold text-indigo-950 flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-file-image text-indigo-600"></i>
+                logo-karya.png
+              </span>
+              <button
+                type="button"
+                onclick="removeUploadedFile()"
+                class="text-xs font-bold text-red-600 hover:underline"
+              >
+                Hapus / Ganti Foto
+              </button>
+            </div>
+            <div
+              class="w-full max-h-80 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center p-2"
+            >
+              <img
+                id="upload-img-preview"
+                src="#"
+                alt="Pratinjau Logo Siswa"
+                class="max-h-80 object-contain rounded-lg"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-800 mb-1"
+              >Catatan Ringkas / Arti Logomu (Opsional):</label
+            >
+            <textarea
+              id="deskripsi-karya"
+              rows="2"
+              placeholder="Contoh: Logo ini gabungan huruf B dan S dengan warna biru cerah..."
+              class="w-full p-2.5 text-xs font-medium text-slate-900 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-slate-50"
+            ></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 7: Pertanyaan Esai -->
+      <section
+        class="bg-white p-6 rounded-2xl shadow-md border border-slate-200/80 space-y-6"
+      >
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+          <div
+            class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg"
+          >
+            <i class="fa-solid fa-pen-to-square"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 text-base">
+              G. Pertanyaan Singkat Seputar Logomu
+            </h3>
+            <p class="text-xs text-slate-600 font-medium">
+              Jawab 5 pertanyaan mudah berikut mengenai logo inisial nama yang
+              telah kamu buat!
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-5 text-xs">
+          <div class="space-y-1.5">
+            <label
+              id="display-esai-1"
+              class="font-bold text-slate-800 text-xs block"
+            >
+              1. Huruf inisial apa saja yang kamu pakai untuk membuat logomu?
+              (Contoh: Huruf A dan R dari nama Ahmad Rifai)
+            </label>
+            <textarea
+              id="esai-1"
+              rows="2"
+              placeholder="Tuliskan jawabanmu di sini..."
+              class="w-full p-3 text-xs font-medium text-slate-900 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-slate-50"
+            ></textarea>
+          </div>
+
+          <div class="space-y-1.5">
+            <label
+              id="display-esai-2"
+              class="font-bold text-slate-800 text-xs block"
+            >
+              2. Warna apa yang kamu pilih untuk logomu, dan mengapa kamu
+              menyukai warna tersebut?
+            </label>
+            <textarea
+              id="esai-2"
+              rows="2"
+              placeholder="Tuliskan jawabanmu di sini..."
+              class="w-full p-3 text-xs font-medium text-slate-900 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-slate-50"
+            ></textarea>
+          </div>
+
+          <div class="space-y-1.5">
+            <label
+              id="display-esai-3"
+              class="font-bold text-slate-800 text-xs block"
+            >
+              3. Bagaimana caramu menggabungkan huruf-huruf tersebut agar
+              terlihat bagus? (Misal: disambungkan, ditumpuk, atau diberi bentuk
+              lingkar)
+            </label>
+            <textarea
+              id="esai-3"
+              rows="2"
+              placeholder="Tuliskan jawabanmu di sini..."
+              class="w-full p-3 text-xs font-medium text-slate-900 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-slate-50"
+            ></textarea>
+          </div>
+
+          <div class="space-y-1.5">
+            <label
+              id="display-esai-4"
+              class="font-bold text-slate-800 text-xs block"
+            >
+              4. Menurutmu, kesan apa yang terlihat saat orang lain melihat logo
+              inisial namamu? (Misal: Keren, Ceria, Rapi, atau Unik)
+            </label>
+            <textarea
+              id="esai-4"
+              rows="2"
+              placeholder="Tuliskan jawabanmu di sini..."
+              class="w-full p-3 text-xs font-medium text-slate-900 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-slate-50"
+            ></textarea>
+          </div>
+
+          <div class="space-y-1.5">
+            <label
+              id="display-esai-5"
+              class="font-bold text-slate-800 text-xs block"
+            >
+              5. Apa bagian yang paling menyenangkan saat kamu menggambar dan
+              merancang logo inisial nama ini?
+            </label>
+            <textarea
+              id="esai-5"
+              rows="2"
+              placeholder="Tuliskan jawabanmu di sini..."
+              class="w-full p-3 text-xs font-medium text-slate-900 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none bg-slate-50"
+            ></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 8: Rating Pemahaman & Umpan Balik -->
+      <section
+        class="bg-white p-6 rounded-2xl shadow-md border border-slate-200/80 space-y-4"
+      >
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+          <div
+            class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-lg"
+          >
+            <i class="fa-solid fa-star"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-900 text-base">
+              H. Penilaian Diri & Umpan Balik Pembelajaran
+            </h3>
+            <p class="text-xs text-slate-600 font-medium">
+              Beri tahu kami sejauh mana kamu memahami materi pembelajaran hari
+              ini!
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-3">
+          <label class="block font-bold text-xs text-slate-900"
+            >Seberapa paham kamu terhadap materi Desain Grafis hari ini?</label
+          >
+          <input type="hidden" id="nilai-pemahaman-siswa" value="0" />
+          <div class="flex flex-wrap gap-2">
+            <button
+              type="button"
+              id="rate-btn-1"
+              onclick="setPahamRating(1)"
+              class="rate-star-btn px-3 py-2 rounded-xl border border-slate-300 bg-white hover:bg-amber-50 text-xs font-semibold text-slate-800 flex items-center gap-1 transition"
+            >
+              <i class="fa-solid fa-star text-slate-300"></i> 1. Kurang Paham
+            </button>
+            <button
+              type="button"
+              id="rate-btn-2"
+              onclick="setPahamRating(2)"
+              class="rate-star-btn px-3 py-2 rounded-xl border border-slate-300 bg-white hover:bg-amber-50 text-xs font-semibold text-slate-800 flex items-center gap-1 transition"
+            >
+              <i class="fa-solid fa-star text-slate-300"></i> 2. Cukup Paham
+            </button>
+            <button
+              type="button"
+              id="rate-btn-3"
+              onclick="setPahamRating(3)"
+              class="rate-star-btn px-3 py-2 rounded-xl border border-slate-300 bg-white hover:bg-amber-50 text-xs font-semibold text-slate-800 flex items-center gap-1 transition"
+            >
+              <i class="fa-solid fa-star text-slate-300"></i> 3. Paham
+            </button>
+            <button
+              type="button"
+              id="rate-btn-4"
+              onclick="setPahamRating(4)"
+              class="rate-star-btn px-3 py-2 rounded-xl border border-slate-300 bg-white hover:bg-amber-50 text-xs font-semibold text-slate-800 flex items-center gap-1 transition"
+            >
+              <i class="fa-solid fa-star text-slate-300"></i> 4. Sangat Paham!
+            </button>
+          </div>
+        </div>
+
+        <div
+          class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2 mt-4"
+        >
+          <label
+            class="block font-bold text-xs text-slate-900 flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-comment-dots text-indigo-600"></i> Kritik &
+            Saran untuk Guru / Pemateri:
+          </label>
+          <p class="text-xs text-slate-600 font-medium">
+            Tuliskan masukan, kendala yang kamu rasakan, atau saran perbaikan
+            untuk pertemuan pembelajaran berikutnya!
+          </p>
+          <textarea
+            id="kritik-saran-siswa"
+            rows="3"
+            placeholder="Contoh: Penjelasannya sudah sangat jelas, tapi kalau bisa di pertemuan depan perbanyak praktik di laptop..."
+            class="w-full p-3 text-sm font-medium text-slate-900 rounded-xl border border-slate-300 focus:ring-2 focus:ring-indigo-500 outline-none transition bg-white"
+          ></textarea>
+        </div>
+
+        <div
+          class="pt-6 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4"
+        >
+          <p class="text-xs text-slate-600 font-medium">
+            <i class="fa-solid fa-circle-info text-indigo-600"></i> Pastikan
+            identitas, upload poster, dan jawaban esai sudah lengkap sebelum
+            mengirim.
+          </p>
+          <button
+            type="button"
+            id="btn-kirim-online"
+            onclick="kirimTugasOnline()"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition flex items-center gap-2"
+          >
+            <i class="fa-brands fa-google-drive text-amber-300"></i> Kirim Tugas
+            ke Google Drive Guru
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer
+      class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500 no-print mt-12"
+    >
+      <p>
+        © LKPD Interaktif Desain Grafis SMP • Untuk Pembelajaran Kelas VII,
+        VIII, & IX
+      </p>
+    </footer>
+
+    <!-- External Script File -->
+    <script src="script.js"></script>
+  </body>
+</html>
